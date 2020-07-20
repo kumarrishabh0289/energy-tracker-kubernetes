@@ -94,19 +94,27 @@ router.post('/greenninjalogin', function (req, res) {
                                         const body = { user: results[0].username };
                                         const token = jwt.sign({ user: body }, 'greenninja', { expiresIn: 900000 });
 
-
-
-                                        const role = new Role({
-                                            _id: new mongoose.Types.ObjectId(),
-                                            email: results[0].username,
-                                            role: results[0].role
-
-                                        });
-                                        role
-                                            .save()
-                                            .then(result => {
-                                                console.log("result", result);
+                                        Role.findOne({ email: results[0].username })
+                                            .exec()
+                                            .then(docs => {
+                                                console.log("checkrole", docs);
+                                                if (!docs) {
+                                                    const role = new Role({
+                                                        _id: new mongoose.Types.ObjectId(),
+                                                        email: results[0].username,
+                                                        role: results[0].role
+            
+                                                    });
+                                                    role
+                                                        .save()
+                                                        .then(result => {
+                                                            console.log("result", result);
+                                                        })
+                                                }
+                                                
                                             })
+
+                                        
 
 
 
@@ -158,20 +166,20 @@ router.get('/', (req, res, next) => {
 
 router.post('/checkrole', (req, res, next) => {
     Role.findOne({ email: req.body.email })
-    .exec()
-    .then(docs => {
-        console.log("checkrole", docs);
-        if (!docs) {
-            res.status(202).json({
-                role:"No Role attached"
-            });
-        }
-        else{
-            res.status(200).json({role:docs.role});
+        .exec()
+        .then(docs => {
+            console.log("checkrole", docs);
+            if (!docs) {
+                res.status(202).json({
+                    role: "No Role attached"
+                });
+            }
+            else {
+                res.status(200).json({ role: docs.role });
 
-        }
-      
-           
+            }
+
+
         })
         .catch(err => {
             console.log(err);
@@ -184,29 +192,29 @@ router.post('/checkrole', (req, res, next) => {
 
 router.post('/updaterole', (req, res, next) => {
     Role.findOne({ email: req.body.email })
-    .exec()
-    .then(docs => {
-        console.log("update", docs);
-        if (!docs) {
-            const role = new Role({
-                _id: new mongoose.Types.ObjectId(),
-                email: req.body.email,
-                role: req.body.role
+        .exec()
+        .then(docs => {
+            console.log("update", docs);
+            if (!docs) {
+                const role = new Role({
+                    _id: new mongoose.Types.ObjectId(),
+                    email: req.body.email,
+                    role: req.body.role
 
-            });
-            role
-                .save()
-                .then(result => {
-                    console.log("result", result);
-                    res.status(200).json({role:result.role});
-                })
-        }
-        else{
-            res.status(200).json({role:docs.role});
+                });
+                role
+                    .save()
+                    .then(result => {
+                        console.log("result", result);
+                        res.status(200).json({ role: result.role });
+                    })
+            }
+            else {
+                res.status(200).json({ role: docs.role });
 
-        }
-      
-           
+            }
+
+
         })
         .catch(err => {
             console.log(err);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import TeacherDashboard from './TeacherDashboard'
+import AddProject from './AddProject';
 // import SensorDeleteComponent from './SensorDeleteComponent.jsx'
 // import SensorAddComponent from './SensorAddComponent.jsx'
 // import SensorManageComponent from './SensorManageComponent.jsx'
@@ -68,7 +69,7 @@ class CourseDetail extends Component {
 
                     {this.state.showResultsDelete ? <TeacherDashboard /> : null}
                     {this.state.showResultsAdd ? <TeacherDashboard /> : null}
-                    {this.state.showResultsUpdate ? <TeacherDashboard /> : null}
+                    {this.state.showResultsUpdate ? <AddProject /> : null}
                     {this.state.showResultsManage ? <TeacherDashboard /> : null}
 
                 </div>
